@@ -34,13 +34,15 @@
       <td> {{ n.price }}</td>
       <td> <span @click="del(n.id)">❌</span> </td>
     </tr>
+    <button class="" @click="">Rendelés</button>
+
   </table>
 </template>
 
 <style scoped>
   table,td{
-    border: 1px solid;
     border-collapse: collapse;
+    text-align: center;
   }
   span:hover{
     cursor: pointer;
@@ -49,7 +51,6 @@
     text-align: center;
     padding: 20px;
     font-family: fantasy ;
-
   }
 
 </style>
