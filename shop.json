@@ -60,10 +60,12 @@
   ],
   "cart": [
     {
-      "id": "3",
-      "name": "asztal",
-      "price": "25000",
-      "quantity": "1"
+      "quantity": 7,
+      "id": "3"
+    },
+    {
+      "quantity": 9,
+      "id": "4"
     }
   ]
 }

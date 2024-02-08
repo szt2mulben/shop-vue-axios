@@ -42,15 +42,19 @@ const del = (id) => {
 }
 
 const incrementQuantity = (id) => {
-  const product = names.value.find(item => item.id === id);
-  const updatedQuantity = product.quantity + 1;
-  updateQuantity(id, updatedQuantity);
+  const productIndex = names.value.findIndex(item => item.id === id);
+  if (productIndex !== -1) {
+    names.value[productIndex].quantity++;
+    updateQuantity(id, names.value[productIndex].quantity);
+  }
 }
 
 const decrementQuantity = (id) => {
-  const product = names.value.find(item => item.id === id);
-  const updatedQuantity = Math.max(product.quantity - 1, 0);
-  updateQuantity(id, updatedQuantity);
+  const productIndex = names.value.findIndex(item => item.id === id);
+  if (productIndex !== -1) {
+    names.value[productIndex].quantity = Math.max(names.value[productIndex].quantity - 1, 0);
+    updateQuantity(id, names.value[productIndex].quantity);
+  }
 }
 
 const updateQuantity = (id, quantity) => {
@@ -62,7 +66,6 @@ const updateQuantity = (id, quantity) => {
     body: JSON.stringify({ quantity })
   }).then(() => {
     console.log('A termék mennyisége frissítve lett a kosárban.');
-    letoltes();
   }).catch(error => {
     console.error('Hiba történt a mennyiség frissítése közben:', error);
   });
