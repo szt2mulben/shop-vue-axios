@@ -1,44 +1,51 @@
 <template>
-    <h1>Vasvári Boltja</h1>
-    <div class="card-container">
-      <div class="card" v-for="product in products" :key="product.id">
-        <img src="../assets/no-image.png">
-        <div class="card-content">
-          <h3>Név: {{ product.name }}</h3><br>
-          <p>Ár: {{ product.price }}</p><br>
-          <button class="button" @click="">Részletek</button>
-          <button class="button" @click="addToCart(product)">Kosárba</button>
-        </div>
+  <h1>Vasvári Boltja</h1>
+  <div class="card-container">
+    <div class="card" v-for="product in products" :key="product.id">
+      <img src="../assets/no-image.png">
+      <div class="card-content">
+        <h3>Név: {{ product.name }}</h3><br>
+        <p>Ár: {{ product.price }}</p><br>
+        <button class="button" @click="">Részletek</button>
+        <button class="button" @click="addToCart(product)">Kosárba</button>
       </div>
     </div>
-  </template>
-  
-  <script setup>
-  import axios from 'axios';
-  import { ref, onMounted } from 'vue';
-  const products = ref([]);
-  
-  onMounted(() => {
-    axios.get('http://localhost:3000/products')
-      .then(resp => products.value = resp.data);
-  });
+  </div>
+</template>
 
-  const addToCart = (product) => {
-    let tombMerete = products.value.length;
-    let id = Number(products.value[tombMerete - 1].id);
-    let d = {id: product.id , name : product.name, price: product.price};
-    console.log(d);    
-    fetch("http://localhost:3000/cart",
-    {
-      method : 'post',
-      body : JSON.stringify(d),
-      headers : {
-        "Content-type" : "application/json"
-      }
-    })
+<script setup>
+import axios from 'axios';
+import { ref, onMounted } from 'vue';
+
+const products = ref([]);
+
+onMounted(() => {
+  axios.get('http://localhost:3000/products')
+    .then(resp => products.value = resp.data);
+});
+
+const addToCart = async (product) => {
+  const cartResponse = await fetch('http://localhost:3000/cart');
+  const cartData = await cartResponse.json();
+  const existingProduct = cartData.find(item => item.id === product.id);
+  if (existingProduct) {
+    alert('A termék már megtalálható a kosárban.');
+    return;
   }
- 
-  </script>
+  const newProduct = { id: product.id, name: product.name, price: product.price, quantity: "1"};
+  fetch('http://localhost:3000/cart', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(newProduct)
+  }).then(() => {
+    alert('A termék hozzáadva a kosárhoz.');
+  }).catch(error => {
+    console.error('Hiba történt a termék hozzáadása közben:', error);
+  });
+}
+</script>
   
   <style scoped>
   h1{

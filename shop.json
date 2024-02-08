@@ -28,6 +28,11 @@
       "id": "d1d2",
       "name": "sdafsd",
       "price": "2000"
+    },
+    {
+      "id": "298b",
+      "name": "teszt2",
+      "price": "60000"
     }
   ],
   "order": [
@@ -53,5 +58,12 @@
       "address": "Ahol megtalálsz"
     }
   ],
-  "cart": []
+  "cart": [
+    {
+      "id": "3",
+      "name": "asztal",
+      "price": "25000",
+      "quantity": "1"
+    }
+  ]
 }

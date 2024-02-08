@@ -1,55 +1,121 @@
-<script setup>
-  import { onMounted, ref  } from 'vue';
-  const names = ref();
+<template>
+  <h1>Kosárban lévő termékek</h1>
+  <div class="container">
+    <table>
+      <tr v-for="n in names" :key="n.id">
+        <td>Terméknév: {{ n.name }}</td>
+        <td>Ár: {{ n.price }}</td>
+        <td>
+          <button class="quantity-button" @click="decrementQuantity(n.id)">-</button>
+          Mennyiség: {{ n.quantity }}
+          <button class="quantity-button" @click="incrementQuantity(n.id)">+</button>
+        </td>
+        <td><span class="spanclass" @click="del(n.id)">❌</span></td>
+      </tr>
+    </table>
+    <button class="button" @click="rendeles()">Rendelés</button>
+  </div>
+</template>
 
-  const letoltes = () => {
-    fetch('http://localhost:3000/cart')
+<script setup>
+import { onMounted, ref } from 'vue';
+
+const names = ref([]);
+
+const letoltes = () => {
+  fetch('http://localhost:3000/cart')
     .then(resp => resp.json())
     .then(json => {
       names.value = json;
-      console.log(names.value);
     })
-  }
+}
 
-  onMounted(() => {
-    letoltes();
+onMounted(() => {
+  letoltes();
+})
+
+const del = (id) => {
+  fetch("http://localhost:3000/cart/" + id, {
+    method: "delete",
   })
-
-  const del = (id) =>{
-    console.log(id)
-    fetch("http://localhost:3000/cart/" + id,{
-      method : "delete",
-    })
     .then(() => letoltes())
-  }
-  
+}
+
+const incrementQuantity = (id) => {
+  const product = names.value.find(item => item.id === id);
+  const updatedQuantity = product.quantity + 1;
+  updateQuantity(id, updatedQuantity);
+}
+
+const decrementQuantity = (id) => {
+  const product = names.value.find(item => item.id === id);
+  const updatedQuantity = Math.max(product.quantity - 1, 0);
+  updateQuantity(id, updatedQuantity);
+}
+
+const updateQuantity = (id, quantity) => {
+  fetch(`http://localhost:3000/cart/${id}`, {
+    method: 'put',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ quantity })
+  }).then(() => {
+    console.log('A termék mennyisége frissítve lett a kosárban.');
+    letoltes();
+  }).catch(error => {
+    console.error('Hiba történt a mennyiség frissítése közben:', error);
+  });
+}
+
+const rendeles = () => {
+  alert("Sikeres rendelés!");
+  fetch("http://localhost:3000/cart", {
+    method: "DELETE",
+  })
+}
 </script>
 
-<template>
-<h1>Kosárban lévő termékek</h1>
-  <table>
-    <tr v-for="n in names" key="n.id">
-      <td> {{ n.name }}</td>
-      <td> {{ n.price }}</td>
-      <td> <span @click="del(n.id)">❌</span> </td>
-    </tr>
-    <button class="" @click="">Rendelés</button>
-
-  </table>
-</template>
-
 <style scoped>
-  table,td{
-    border-collapse: collapse;
-    text-align: center;
-  }
-  span:hover{
-    cursor: pointer;
-  }
-  h1{
-    text-align: center;
-    padding: 20px;
-    font-family: fantasy ;
-  }
+.spanclass {
+  cursor: pointer;
+}
 
+.container {
+  text-align: center;
+  background-color: #1f7e1f;
+  padding: 20px;
+  margin: 50px;
+  border-radius: 10px;
+}
+
+table {
+  margin: 0 auto; 
+  border-collapse: collapse;
+  text-align: center;
+  width: 100%;
+}
+
+td, th {
+  padding: 8px;
+}
+
+button {
+  margin-top: 20px;
+  display: inline-block;
+  padding: 8px 16px;
+  background-color: #006400;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+}
+
+.quantity-button {
+  margin: 0 5px;
+}
+h1 {
+  text-align: center;
+  padding: 20px;
+  font-family: fantasy;
+}
 </style>

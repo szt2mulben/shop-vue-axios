@@ -26,7 +26,6 @@
     .then(resp => resp.json())
     .then(json => {
       names.value = json;
-      console.log(names.value);
     })
   }
 
