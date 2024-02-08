@@ -3,7 +3,7 @@
   const names = ref();
 
   const letoltes = () => {
-    fetch('http://localhost:3000/products')
+    fetch('http://localhost:3000/cart')
     .then(resp => resp.json())
     .then(json => {
       names.value = json;
@@ -17,7 +17,7 @@
 
   const del = (id) =>{
     console.log(id)
-    fetch("http://localhost:3000/products/" + id,{
+    fetch("http://localhost:3000/cart/" + id,{
       method : "delete",
     })
     .then(() => letoltes())
@@ -29,7 +29,6 @@
 <h1>Kosárban lévő termékek</h1>
   <table>
     <tr v-for="n in names" key="n.id">
-      <td> {{ n.id }} </td>
       <td> {{ n.name }}</td>
       <td> {{ n.price }}</td>
       <td> <span @click="del(n.id)">❌</span> </td>

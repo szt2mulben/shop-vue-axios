@@ -6,7 +6,8 @@
         <div class="card-content">
           <h3>Név: {{ product.name }}</h3><br>
           <p>Ár: {{ product.price }}</p><br>
-          <a href="#" class="button">Részletek</a>
+          <button class="button" @click="">Részletek</button>
+          <button class="button" @click="addToCart(product)">Kosárba</button>
         </div>
       </div>
     </div>
@@ -15,13 +16,28 @@
   <script setup>
   import axios from 'axios';
   import { ref, onMounted } from 'vue';
-  
   const products = ref([]);
   
   onMounted(() => {
     axios.get('http://localhost:3000/products')
       .then(resp => products.value = resp.data);
   });
+
+  const addToCart = (product) => {
+    let tombMerete = products.value.length;
+    let id = Number(products.value[tombMerete - 1].id);
+    let d = {id: product.id , name : product.name, price: product.price};
+    console.log(d);    
+    fetch("http://localhost:3000/cart",
+    {
+      method : 'post',
+      body : JSON.stringify(d),
+      headers : {
+        "Content-type" : "application/json"
+      }
+    })
+  }
+ 
   </script>
   
   <style scoped>
@@ -64,14 +80,13 @@
   }
   
   .button {
-    display: inline-block;
-    padding: 8px 16px;
-    background-color: #006400;
-    color: white;
-    text-decoration: none;
-    border-radius: 8px;
-  }
-  
+  display: inline-block;
+  padding: 8px 16px;
+  background-color: #006400;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+}
   @media (max-width: 768px) {
     .card {
       flex-basis: calc(50% - 20px);

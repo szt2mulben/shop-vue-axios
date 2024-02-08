@@ -23,8 +23,12 @@
       "name": "szék",
       "price": "25000",
       "img": "no-image.png"
+    },
+    {
+      "id": "d1d2",
+      "name": "sdafsd",
+      "price": "2000"
     }
-    
   ],
   "order": [
     {

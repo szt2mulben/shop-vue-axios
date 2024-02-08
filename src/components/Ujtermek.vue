@@ -8,7 +8,7 @@
     console.log(name.value);
     let tombMerete = names.value.length;
     let id = Number(names.value[tombMerete - 1].id);
-    let d = {id: (id + 1), name : name.value, price: ara.value};
+    let d = {id: name.id, name : name.value, price: ara.value};
     console.log(d);    
     fetch("http://localhost:3000/products",
     {
