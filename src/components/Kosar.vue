@@ -71,12 +71,17 @@ const updateQuantity = (id, quantity) => {
   });
 }
 
-const rendeles = () => {
-  alert("Sikeres rendelés!");
-  fetch("http://localhost:3000/cart", {
-    method: "DELETE",
-  })
-}
+
+const rendeles = async () => {
+    await Promise.all(names.value.map(item => {
+      return fetch(`http://localhost:3000/cart/${item.id}`, {
+        method: 'delete',
+      });
+    }));
+
+    letoltes();
+  alert("Sikeres rendelés!")
+  }
 </script>
 
 <style scoped>
